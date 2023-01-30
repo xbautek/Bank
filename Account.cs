@@ -62,6 +62,15 @@ namespace Bank
     {
         private decimal debt = 0;
 
+        new public bool IsBlocked { get; private set; } = false;
+        new public void Unblock()
+        {
+            if(debt == 0)
+            IsBlocked = false;
+        }
+
+        new public void Block() => IsBlocked = true;
+
         public AccountPlus(string name, decimal initialLimit = 100, decimal initialBalance = 0) : base(name)
         {
             if (name == null) { throw new ArgumentOutOfRangeException("Name is null"); }
@@ -148,11 +157,13 @@ namespace Bank
             else if(debt > amount)
             {
                 debt -= amount;
+                AvaibleFounds += amount;
                 return true;
             }
             else if(debt == amount)
             {
                 debt = 0;
+                AvaibleFounds += amount;
                 Unblock();
                 return true;
             }
